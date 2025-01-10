@@ -21,7 +21,6 @@ initialCards.forEach(function (item) {
 // @todo: Открытие окон
 const popupEdit = document.querySelector('.popup_type_edit');
 const popupNewCard = document.querySelector('.popup_type_new-card');
-export const popupImage = document.querySelector('.popup_type_image');
 
 container.addEventListener('click', function (evt) {
     if (evt.target.classList.contains('profile__edit-button')) {
