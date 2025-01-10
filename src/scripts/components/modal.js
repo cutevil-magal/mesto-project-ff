@@ -20,9 +20,9 @@ export function closePopup(popup) {
 // @todo: Закрытие окон по кнопке Esc
 function handleEscClose(evt) {
     if (evt.key === 'Escape') {
-        const openPopup = document.querySelector('.popup_is-opened');
-        if (openPopup) {
-            closePopup(openPopup)
+        const popup = document.querySelector('.popup_is-opened');
+        if (popup) {
+            closePopup(popup)
         }
     }
 }
