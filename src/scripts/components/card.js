@@ -1,29 +1,21 @@
 // Функции для работы с карточками
 
-import {openPopup} from '../components/modal.js';
-
 // @todo: Функция создания карточки
-function createCard(cardData,likeHandler,imageHandler) {
+function createCard(cardData,deleteCard,likeHandler,imageHandler) {
     const cardTemplate = document.querySelector('#card-template').content;
     const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
-
     const cardTitle = cardElement.querySelector('.card__title'); 
-    const cardImageSrc = cardElement.querySelector('.card__image');
-    const cardImageAlt = cardElement.querySelector('.card__image');
+    const cardImage = cardElement.querySelector('.card__image');
+    const deleteButton = cardElement.querySelector('.card__delete-button'); 
+    const likeButton = cardElement.querySelector('.card__like-button'); 
 
     cardTitle.textContent = cardData.name; 
-    cardImageSrc.src = cardData.link;
-    cardImageAlt.alt = cardData.name;
-
-    const deleteButton = cardElement.querySelector('.card__delete-button'); 
+    cardImage.src = cardData.link;
+    cardImage.alt = cardData.name;
+ 
     deleteButton.addEventListener('click', () => deleteCard(cardElement));
-
-    const likeButton = cardElement.querySelector('.card__like-button'); 
     likeButton.addEventListener('click', likeHandler);
-
-    const imageShow = cardElement.querySelector('.card__image'); 
-    imageShow.addEventListener('click', () => imageHandler(cardTitle.textContent,cardImageSrc.src,cardImageAlt.alt));
-    
+    cardImage.addEventListener('click', () => imageHandler(cardData.name,cardData.link));
     return cardElement;
 }
 
@@ -32,19 +24,10 @@ function handleLikeButton(evt) {
     evt.target.classList.toggle('card__like-button_is-active'); 
 }
 
-// @todo: Функция открытия карточки
-function handleImageShow(title,src,alt) { 
-    const popupImage = document.querySelector('.popup_type_image');
-    document.querySelector('.popup__caption').textContent = title;
-    document.querySelector('.popup__image').src = src;
-    document.querySelector('.popup__image').alt = alt;
-    openPopup(popupImage);
-}
-
 // @todo: Функция удаления карточки
 function deleteCard(card) { 
     card.remove(); 
 }
 
-export {handleLikeButton, handleImageShow, createCard};
+export {handleLikeButton, createCard, deleteCard};
 
