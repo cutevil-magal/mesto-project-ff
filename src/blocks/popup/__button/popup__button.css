@@ -15,8 +15,10 @@
 }
 
 .popup__button:hover {
+  opacity: 100%;
   background: rgba(0, 0, 0, 0.8);
   cursor: pointer;
+  color: white;
 }
 
 @media screen and (max-width: 568px) {
@@ -24,4 +26,11 @@
     font-size: 14px;
     line-height: 17px;
   }
+}
+
+.popup__button_disabled {
+  opacity: 20%;
+  background-color: transparent;
+  border: #000 solid 1px;
+  color: #000;
 }
