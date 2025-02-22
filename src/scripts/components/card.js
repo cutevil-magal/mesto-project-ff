@@ -1,21 +1,20 @@
 // Функции для работы с карточками
-import {openPopup, closePopup} from './modal.js';
-import {deleteCardApi, likeCard, dislikeCard} from './api.js';
 
-const popupDeleteCard = document.querySelector('.popup_type_delete');
-const deletePopupButton =  document.querySelector('.popup__button-delete');
+import {userId, likeCard, dislikeCard} from './api.js';
 
 // @todo: Функция создания карточки
-function createCard(cardData,deleteCard,likeHandler,imageHandler) {
+export function createCard(cardData,deleteCard,likeHandler,imageHandler) {
     const cardTemplate = document.querySelector('#card-template').content;
     const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
     const cardTitle = cardElement.querySelector('.card__title'); 
     const cardImage = cardElement.querySelector('.card__image');
     const deleteButton = cardElement.querySelector('.card__delete-button'); 
     const likeButton = cardElement.querySelector('.card__like-button'); 
+    const likeCount = cardElement.querySelector('.card__like-count');
 
     // для добавление лайков
     cardElement.id = cardData._id;
+    likeCount.textContent = (cardData.likes || []).length;
 
     cardTitle.textContent = cardData.name; 
     cardImage.src = cardData.link;
@@ -27,28 +26,37 @@ function createCard(cardData,deleteCard,likeHandler,imageHandler) {
     return cardElement;
 }
 
+// Обновление кол-ва лайков
+export const updateCardLikes = (cardData) => {
+    const cardElement = document.getElementById(cardData._id);
+    const likeButton = cardElement.querySelector('.card__like-button');
+    const likeCount = cardElement.querySelector('.card__like-count');
+    
+    if (cardData.likes.some(user => user._id == userId)) {
+        likeButton.classList.add('card__like-button_is-active');
+    } 
+    else {
+        likeButton.classList.remove('card__like-button_is-active');
+    }
+    
+    likeCount.textContent = cardData.likes.length;
+}
+
 // @todo: Функция лайка карточки
-function handleLikeButton(evt) { 
-    let cardElement = evt.target.closest('.card');
-    let cardId = cardElement.id;
+export function handleLikeButton(evt) { 
+    const cardElement = evt.target.closest('.card');
+    const cardId = cardElement.id;
     if (evt.target.classList.contains('card__like-button_is-active')) {
-        dislikeCard(cardId);
+        dislikeCard(cardId)
+        .then(data => updateCardLikes(data))
+        .catch(error => {
+            console.error('Ошибка:', error);
+        });
     } else {
-        likeCard(cardId);
+        likeCard(cardId)
+        .then(data => updateCardLikes(data))
+        .catch(error => {
+            console.error('Ошибка:', error);
+        });
     }
 }
-
-// @todo: Функция удаления карточки
-function deleteCard(cardId,card) {  
-    openPopup(popupDeleteCard);
-    deletePopupButton.addEventListener('click', () => handleConfirmDelete(cardId,card));
-}
-
-// обработчик кнопки "Да" в попапе удаления карточки
-function handleConfirmDelete(cardId,card) {
-    deleteCardApi(cardId);
-    closePopup(popupDeleteCard);
-    card.remove();
-}
-
-export {handleLikeButton, createCard, deleteCard};

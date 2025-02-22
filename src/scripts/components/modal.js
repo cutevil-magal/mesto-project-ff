@@ -2,7 +2,6 @@
 
 // @todo: Открытие окон 
 export function openPopup (popup){
-    popup.classList.remove('popup_is-animated');
     popup.classList.add('popup_is-opened');
     document.addEventListener('keydown', handleEscClose);
     popup.addEventListener('click', handleOverlayClose);
