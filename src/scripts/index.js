@@ -6,13 +6,14 @@
 
 import '../pages/index.css';
 
-import {handleLikeButton, createCard, updateCardLikes} from './components/card.js'; 
+import {handleLikeButton, createCard} from './components/card.js'; 
 import {openPopup, closePopup} from './components/modal.js';
 
 import {enableValidation, clearValidation} from './components/validation.js';
 import {loadUserData, loadCards, updateРrofile, addNewCard, addNewAvatar, deleteCardApi} from './components/api.js';
 
 let globalCardId, globalCard;
+let userId;
 // @todo: DOM узлы
 const container = document.querySelector('.content');
 const cardsContainer = container.querySelector('.places__list');
@@ -71,6 +72,7 @@ Promise.all([loadUserData(), loadCards()])
 .then(data => {
     const [userData, cardsData] = data;
     // Обновляем информацию о пользователе
+    userId = userData._id;
     userSettings.name.textContent = userData.name;
     userSettings.about.textContent = userData.about;
     userSettings.avatar.style.backgroundImage = `url(${userData.avatar})`;
@@ -78,14 +80,8 @@ Promise.all([loadUserData(), loadCards()])
     cardsContainer.innerHTML = '';
     // Выводим карточки
     cardsData.forEach(item => {
-        const card = createCard(item, deleteCard, handleLikeButton, handleImageShow);
-        cardsContainer.append(card);
-        // отображение лайкнутых карточек
-        updateCardLikes(item);
-        // обработка иконки корзины
-        if (item.owner._id != userData._id) {
-            card.querySelector('.card__delete-button').style.display = 'none';
-        }
+        const card = createCard(item, deleteCard, handleLikeButton, handleImageShow, userId);
+        cardsContainer.append(card);        
     });
 })
 .catch(error => {
@@ -127,9 +123,7 @@ function handleNewPlaceFormSubmit(evt) {
     saveButtonNewCard.textContent = 'Сохранение...';
     addNewCard(placeNameInput.value,linkInput.value)
     .then((result) => {
-        const newCard = { name: result.name, link: result.link, _id: result._id};
-        // console.log(result._id);
-        cardsContainer.prepend(createCard(newCard,deleteCard,handleLikeButton,handleImageShow));
+        cardsContainer.prepend(createCard(result,deleteCard,handleLikeButton,handleImageShow,userId));
         closePopup(popupNewCard);   
     })
     .catch(error => {

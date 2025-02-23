@@ -1,6 +1,6 @@
 // в файле api.js описаны функции для взаимодействия с сервером;
 
-export let userId;
+
 
 const config = {
     baseUrl: 'https://nomoreparties.co/v1/wff-cohort-32',
@@ -17,10 +17,6 @@ export const loadUserData = () =>{
         headers: config.headers,
     })
     .then(res =>res.ok ? res.json() : Promise.reject('Ошибка...'))
-    .then(userData => {
-        userId = userData._id;
-        return userData;
-    })
 }
 
 // Загрузка карточек

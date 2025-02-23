@@ -10,8 +10,7 @@ export function openPopup (popup){
 
 // @todo: Закрытие окон
 export function closePopup(popup) { 
-    popup.classList.remove('popup_is-opened');  
-    popup.classList.add('popup_is-animated');
+    popup.classList.remove('popup_is-opened');
     document.removeEventListener('keydown', handleEscClose); 
     popup.removeEventListener('click', handleOverlayClose); 
 }
